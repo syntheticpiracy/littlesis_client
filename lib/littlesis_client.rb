@@ -33,7 +33,8 @@ class LittlesisClient
     puts 'GET GET GET GET GET:'
     puts url
     puts params
-    puts @response
+    puts response.class
+    puts @response.inspect
 
     case @response.status
     when 400
