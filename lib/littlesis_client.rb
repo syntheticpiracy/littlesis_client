@@ -22,6 +22,52 @@ class LittlesisClient
     @conn.url_prefix = url
   end
 
+  def save_api_call(url, params, response)
+    tempHash = {"url" => method, "params" => params, "response" => response}
+
+    # puts method
+    #
+    # filename = "./app/api_backups/#{method}.json"
+    # file = File.read(filename)
+    # old_hash = JSON.parse(file)
+    # #
+    # # puts "existing record args"
+    # # old_hash.each do |h|
+    # #   puts h["Args"].to_json
+    # # end
+    # #
+    # # puts 'matching record args'
+    # # match = old_hash.find{ |h| h['Args'].to_json == args.to_json }
+    # # if match
+    # #   puts match["Args"].to_json
+    # # end
+    # match = old_hash.find{ |h| h['Args'].to_json == args.to_json }
+    #
+    # if match
+    #   puts "MATCHING RECORD FOUND, NOTHING ADDED"
+    # else
+    #   puts "added new API call to file"
+    #   File.open("./app/api_backups/#{method}.json", "w") do |f|
+    #     f.puts JSON.pretty_generate(old_hash << tempHash)
+    #   end
+    # end
+  end
+
+  def use_saved(method, args)
+    # filename = "./app/api_backups/#{method}.json"
+    # file = File.read(filename)
+    # hash = JSON.parse(file)
+    #
+    # match = hash.find{ |h| h['Args'].to_json == args.to_json }
+    #
+    # if match
+    #   puts 'USING SAVED DATA'
+    #   old_call = match
+    # end
+    #
+    # return old_call["Response"]
+  end
+
   # returns response object and raises exceptions for certain http error codes
   def get(url, params={})
     raise AuthenticationError, "You must use an api key" if @api_key.nil?
@@ -44,14 +90,22 @@ class LittlesisClient
     else
       @response
     end
+
+    puts 'GET GET GET GET GET:'
+    puts url
+    puts url.class
+    puts params
+    puts params.class
+    puts response
+    puts response.class
   end
 
   # create accessors for models
   %w(Entity Relationship List Image).each do |model_name|
-    
+
     # method name is snake case of model name
     method_name = model_name.underscore
-    
+
     # define the method for each model
     class_eval <<-EOM
       def #{method_name}
@@ -62,11 +116,11 @@ class LittlesisClient
         # create a copy of the class
         @#{method_name} = Class.new(#{model_name})
 
-        # set the copy's 'client' value to this LittlesisClient instance 
+        # set the copy's 'client' value to this LittlesisClient instance
         @#{method_name}.client = self
 
         def @#{method_name}.model_name
-          #{model_name}.model_name          
+          #{model_name}.model_name
         end
 
         # return the new class
@@ -74,7 +128,7 @@ class LittlesisClient
       end
     EOM
   end
-      
+
   # exception classes for various bad situations
   class Error < StandardError; end
   class InvalidRequestError < Error; end                    # errors caused by invalid requests from the user
