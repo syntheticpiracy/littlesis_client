@@ -30,6 +30,11 @@ class LittlesisClient
     @last_response = @response = @conn.get(url, params)
     @last_request = { :url => @response.env[:url], :headers => @response.env[:request_headers] }
 
+    puts 'GET GET GET GET GET:'
+    puts url
+    puts params
+    puts @response
+
     case @response.status
     when 400
       raise InvalidRequestDataError, "Invalid request data: #{@response.body.to_s}"
@@ -44,14 +49,6 @@ class LittlesisClient
     else
       @response
     end
-
-    puts 'GET GET GET GET GET:'
-    puts url
-    puts url.class
-    puts params
-    puts params.class
-    puts @response
-    puts @response.class
   end
 
   # create accessors for models
