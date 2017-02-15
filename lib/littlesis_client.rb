@@ -96,8 +96,8 @@ class LittlesisClient
     puts url.class
     puts params
     puts params.class
-    puts response
-    puts response.class
+    puts @response
+    puts @response.class
   end
 
   # create accessors for models
