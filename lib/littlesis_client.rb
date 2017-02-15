@@ -44,6 +44,14 @@ class LittlesisClient
     else
       @response
     end
+
+    puts 'GET GET GET GET GET:'
+    puts url
+    puts url.class
+    puts params
+    puts params.class
+    puts @response
+    puts @response.class
   end
 
   # create accessors for models
